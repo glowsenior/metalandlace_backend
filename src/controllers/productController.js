@@ -1,0 +1,94 @@
+const Product = require('../models/Product');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+
+// Get all products
+const getAllProducts = catchAsync(async (req, res, next) => {
+  const products = await Product.find({ isActive: true });
+
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    data: {
+      products
+    }
+  });
+});
+
+// Get single product
+const getProduct = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  
+  let product;
+  
+  // Check if the parameter is a valid ObjectId or a slug
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    product = await Product.findById(id);
+  } else {
+    product = await Product.findOne({ slug: id, isActive: true });
+  }
+
+  if (!product) {
+    return next(new AppError('No product found with that ID or slug', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product
+    }
+  });
+});
+
+// Create new product (Admin only)
+const createProduct = catchAsync(async (req, res, next) => {
+  const newProduct = await Product.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      product: newProduct
+    }
+  });
+});
+
+// Update product (Admin only)
+const updateProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  if (!product) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product
+    }
+  });
+});
+
+// Delete product (Admin only)
+const deleteProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findByIdAndDelete(req.params.id);
+
+  if (!product) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
+
+module.exports = {
+  getAllProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct
+};

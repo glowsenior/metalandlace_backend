@@ -1,0 +1,749 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789abc",
+		"name": "Seramic Backend API",
+		"description": "Complete API collection for Seramic ceramic e-commerce backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Server Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if the server is running and healthy"
+					},
+					"response": []
+				}
+			],
+			"description": "Health check endpoints"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "vases",
+									"disabled": true
+								},
+								{
+									"key": "featured",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all products with optional filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"{{product_id}}"
+							]
+						},
+						"description": "Get a single product by ID or slug"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Elegant Blue Ceramic Vase\",\n  \"description\": \"A stunning handcrafted ceramic vase with beautiful blue glazing. Perfect for displaying fresh flowers or as a standalone decorative piece.\",\n  \"price\": 89.99,\n  \"discountPrice\": 79.99,\n  \"category\": \"vases\",\n  \"stock\": 15,\n  \"dimensions\": \"12 inches tall, 6 inches wide\",\n  \"weight\": \"2.5 lbs\",\n  \"colors\": [\"Blue\", \"White\"],\n  \"materials\": [\"Ceramic\", \"Glaze\"],\n  \"care\": \"Hand wash with mild soap. Avoid harsh chemicals.\",\n  \"images\": [\n    {\n      \"url\": \"https://example.com/vase1.jpg\",\n      \"alt\": \"Blue ceramic vase front view\",\n      \"isPrimary\": true\n    }\n  ],\n  \"tags\": [\"handcrafted\", \"decorative\", \"blue\", \"ceramic\"],\n  \"featured\": true,\n  \"new\": true,\n  \"seoTitle\": \"Elegant Blue Ceramic Vase - Handcrafted Home Decor\",\n  \"seoDescription\": \"Beautiful handcrafted blue ceramic vase perfect for home decoration\",\n  \"seoKeywords\": [\"ceramic vase\", \"blue vase\", \"handcrafted\", \"home decor\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a new product"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 94.99,\n  \"stock\": 20,\n  \"featured\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"{{product_id}}"
+							]
+						},
+						"description": "Update an existing product"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"{{product_id}}"
+							]
+						},
+						"description": "Delete a product"
+					},
+					"response": []
+				}
+			],
+			"description": "Product management endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Get all users (admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Get a single user by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"passwordConfirm\": \"SecurePass123!\",\n  \"phone\": \"+1-555-123-4567\",\n  \"role\": \"customer\",\n  \"addresses\": [\n    {\n      \"type\": \"both\",\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"addressLine1\": \"123 Main Street\",\n      \"city\": \"New York\",\n      \"state\": \"NY\",\n      \"postalCode\": \"10001\",\n      \"country\": \"United States\",\n      \"isDefault\": true\n    }\n  ],\n  \"preferences\": {\n    \"newsletter\": true,\n    \"promotions\": true,\n    \"orderUpdates\": true\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Create a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Jane\",\n  \"phone\": \"+1-555-987-6543\",\n  \"preferences\": {\n    \"newsletter\": false\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Update user information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Delete a user account"
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "{{user_id}}",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all orders with optional filtering"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get a single order by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"product\": \"{{product_id}}\",\n      \"name\": \"Elegant Blue Ceramic Vase\",\n      \"image\": {\n        \"url\": \"https://example.com/vase1.jpg\",\n        \"alt\": \"Blue ceramic vase\"\n      },\n      \"price\": 89.99,\n      \"quantity\": 2,\n      \"total\": 179.98\n    }\n  ],\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"addressLine1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"postalCode\": \"10001\",\n    \"country\": \"United States\",\n    \"phone\": \"+1-555-123-4567\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"addressLine1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"postalCode\": \"10001\",\n    \"country\": \"United States\",\n    \"phone\": \"+1-555-123-4567\"\n  },\n  \"paymentMethod\": \"credit_card\",\n  \"subtotal\": 179.98,\n  \"taxAmount\": 14.40,\n  \"shippingCost\": 9.99,\n  \"total\": 204.37,\n  \"shippingMethod\": \"standard\",\n  \"customerNotes\": \"Please handle with care\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						},
+						"description": "Create a new order"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"confirmed\",\n  \"paymentStatus\": \"paid\",\n  \"trackingNumber\": \"1Z999AA1234567890\",\n  \"carrier\": \"UPS\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Update order status and details"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Cancel/delete an order"
+					},
+					"response": []
+				}
+			],
+			"description": "Order management endpoints"
+		},
+		{
+			"name": "Sample Data Tests",
+			"item": [
+				{
+					"name": "Create Sample Ceramic Vase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Artisan Ceramic Vase Collection - Azure Blue\",\n  \"description\": \"Handcrafted ceramic vase featuring a stunning azure blue glaze. This elegant piece showcases traditional pottery techniques with a modern aesthetic. Perfect for displaying fresh flowers or as a standalone decorative accent in any room.\",\n  \"price\": 124.99,\n  \"discountPrice\": 99.99,\n  \"category\": \"vases\",\n  \"stock\": 8,\n  \"dimensions\": \"14 inches tall, 7 inches diameter at widest point\",\n  \"weight\": \"3.2 lbs\",\n  \"colors\": [\"Azure Blue\", \"White\", \"Cream\"],\n  \"materials\": [\"High-fired ceramic\", \"Lead-free glaze\"],\n  \"care\": \"Hand wash with warm water and mild soap. Avoid abrasive cleaners. Not dishwasher safe.\",\n  \"images\": [\n    {\n      \"url\": \"https://images.unsplash.com/photo-1578662996442-48f60103fc96\",\n      \"alt\": \"Azure blue ceramic vase front view\",\n      \"isPrimary\": true\n    },\n    {\n      \"url\": \"https://images.unsplash.com/photo-1586023492125-27b2c045efd7\",\n      \"alt\": \"Azure blue ceramic vase side angle\",\n      \"isPrimary\": false\n    }\n  ],\n  \"tags\": [\"handcrafted\", \"artisan\", \"ceramic\", \"vase\", \"blue\", \"decorative\", \"pottery\"],\n  \"featured\": true,\n  \"new\": true,\n  \"bestseller\": false,\n  \"seoTitle\": \"Artisan Azure Blue Ceramic Vase - Handcrafted Home Decor\",\n  \"seoDescription\": \"Beautiful handcrafted azure blue ceramic vase perfect for modern and traditional home decoration. High-quality pottery with lead-free glaze.\",\n  \"seoKeywords\": [\"ceramic vase\", \"blue vase\", \"handcrafted pottery\", \"home decor\", \"artisan ceramic\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a sample ceramic vase product"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sample Dinner Plate Set",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Rustic Ceramic Dinner Plate Set - Sage Green\",\n  \"description\": \"Set of 4 handcrafted ceramic dinner plates in a beautiful sage green finish. Each plate features subtle variations that highlight the artisanal craftsmanship. Perfect for everyday dining or special occasions.\",\n  \"price\": 89.99,\n  \"category\": \"plates\",\n  \"stock\": 12,\n  \"dimensions\": \"10.5 inches diameter, 1 inch deep\",\n  \"weight\": \"4.8 lbs (set of 4)\",\n  \"colors\": [\"Sage Green\", \"Natural Clay\"],\n  \"materials\": [\"Stoneware ceramic\", \"Food-safe glaze\"],\n  \"care\": \"Dishwasher safe on gentle cycle. Microwave safe. Avoid sudden temperature changes.\",\n  \"images\": [\n    {\n      \"url\": \"https://images.unsplash.com/photo-1584464491033-06628f3a6b7b\",\n      \"alt\": \"Sage green ceramic dinner plates set\",\n      \"isPrimary\": true\n    }\n  ],\n  \"tags\": [\"dinner plates\", \"ceramic\", \"sage green\", \"set\", \"handcrafted\", \"dining\"],\n  \"featured\": false,\n  \"new\": true,\n  \"bestseller\": true,\n  \"seoTitle\": \"Rustic Sage Green Ceramic Dinner Plate Set - Handcrafted Dinnerware\",\n  \"seoDescription\": \"Set of 4 handcrafted sage green ceramic dinner plates. Perfect for everyday dining with artisanal style.\",\n  \"seoKeywords\": [\"ceramic plates\", \"dinner plates\", \"sage green\", \"handcrafted dinnerware\", \"stoneware\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a sample ceramic dinner plate set"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sample Customer User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Sarah\",\n  \"lastName\": \"Johnson\",\n  \"email\": \"sarah.johnson@example.com\",\n  \"password\": \"CustomerPass123!\",\n  \"passwordConfirm\": \"CustomerPass123!\",\n  \"phone\": \"+1-555-234-5678\",\n  \"role\": \"customer\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"female\",\n  \"addresses\": [\n    {\n      \"type\": \"both\",\n      \"firstName\": \"Sarah\",\n      \"lastName\": \"Johnson\",\n      \"addressLine1\": \"456 Oak Avenue\",\n      \"addressLine2\": \"Apt 2B\",\n      \"city\": \"San Francisco\",\n      \"state\": \"CA\",\n      \"postalCode\": \"94102\",\n      \"country\": \"United States\",\n      \"isDefault\": true\n    }\n  ],\n  \"preferences\": {\n    \"newsletter\": true,\n    \"promotions\": true,\n    \"orderUpdates\": true,\n    \"currency\": \"USD\",\n    \"language\": \"en\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Create a sample customer user account"
+					},
+					"response": []
+				}
+			],
+			"description": "Sample data creation for testing"
+		},
+		{
+			"name": "Advanced Queries",
+			"item": [
+				{
+					"name": "Get Featured Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?featured=true&limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "featured",
+									"value": "true"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get featured products only"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products by Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?category=vases&sort=-createdAt",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "vases"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt"
+								}
+							]
+						},
+						"description": "Get products filtered by category"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products with Price Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?price[gte]=50&price[lte]=150&sort=price",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "price[gte]",
+									"value": "50"
+								},
+								{
+									"key": "price[lte]",
+									"value": "150"
+								},
+								{
+									"key": "sort",
+									"value": "price"
+								}
+							]
+						},
+						"description": "Get products within a price range"
+					},
+					"response": []
+				},
+				{
+					"name": "Get New Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?new=true&sort=-createdAt&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "new",
+									"value": "true"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get newest products"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bestseller Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?bestseller=true&sort=-soldCount",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "bestseller",
+									"value": "true"
+								},
+								{
+									"key": "sort",
+									"value": "-soldCount"
+								}
+							]
+						},
+						"description": "Get bestselling products"
+					},
+					"response": []
+				}
+			],
+			"description": "Advanced query examples for products"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
