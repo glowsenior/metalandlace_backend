@@ -48,6 +48,7 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "axios": "^1.9.0",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",

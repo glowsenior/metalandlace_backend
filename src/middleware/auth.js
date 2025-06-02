@@ -5,15 +5,24 @@ const User = require('../models/User');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (user) => {
+  // Create a user object with only the necessary fields for the frontend
+  const userForToken = {
+    id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    role: user.role
+  };
+  
+  return jwt.sign({ user: userForToken }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 const createSendToken = (user, statusCode, req, res) => {
-  const token = signToken(user._id);
+  const token = signToken(user);
 
+  // Set cookie for web browsers
   res.cookie('jwt', token, {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -26,12 +35,19 @@ const createSendToken = (user, statusCode, req, res) => {
   // Remove password from output
   user.password = undefined;
 
+  // Create a simplified user object for the frontend
+  const userForResponse = {
+    id: user._id,
+    name: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    role: user.role
+  };
+
+  // Return response in the format expected by the frontend
   res.status(statusCode).json({
     status: 'success',
     token,
-    data: {
-      user,
-    },
+    user: userForResponse
   });
 };
 
@@ -133,7 +149,10 @@ const protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // 3) Check if user still exists
-  const currentUser = await User.findById(decoded.id);
+  // Handle both token formats (old format with just id and new format with user object)
+  const userId = decoded.user ? decoded.user.id : decoded.id;
+  const currentUser = await User.findById(userId);
+  
   if (!currentUser) {
     return next(
       new AppError(
@@ -172,7 +191,10 @@ const isLoggedIn = async (req, res, next) => {
       );
 
       // 2) Check if user still exists
-      const currentUser = await User.findById(decoded.id);
+      // Handle both token formats (old format with just id and new format with user object)
+      const userId = decoded.user ? decoded.user.id : decoded.id;
+      const currentUser = await User.findById(userId);
+      
       if (!currentUser) {
         return next();
       }

@@ -27,6 +27,11 @@ const getOrder = catchAsync(async (req, res, next) => {
     return next(new AppError('No order found with that ID', 404));
   }
 
+  // Check if user is admin or if the order belongs to the user
+  if (req.user.role !== 'admin' && order.user._id.toString() !== req.user._id.toString()) {
+    return next(new AppError('You do not have permission to view this order', 403));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -35,8 +40,25 @@ const getOrder = catchAsync(async (req, res, next) => {
   });
 });
 
+// Get my orders
+const getMyOrders = catchAsync(async (req, res, next) => {
+  const orders = await Order.find({ user: req.user._id })
+    .populate('items.product', 'name images');
+
+  res.status(200).json({
+    status: 'success',
+    results: orders.length,
+    data: {
+      orders
+    }
+  });
+});
+
 // Create new order
 const createOrder = catchAsync(async (req, res, next) => {
+  // Add the current user to the order
+  req.body.user = req.user._id;
+  
   const newOrder = await Order.create(req.body);
 
   res.status(201).json({
@@ -83,6 +105,7 @@ const deleteOrder = catchAsync(async (req, res, next) => {
 module.exports = {
   getAllOrders,
   getOrder,
+  getMyOrders,
   createOrder,
   updateOrder,
   deleteOrder
