@@ -56,6 +56,19 @@ const getProduct = catchAsync(async (req, res, next) => {
 
 // Create new product (Admin only)
 const createProduct = catchAsync(async (req, res, next) => {
+  // Parse JSON strings from form data
+  const formDataFields = ['colors', 'materials', 'tags', 'seoKeywords'];
+  formDataFields.forEach(field => {
+    if (req.body[field] && typeof req.body[field] === 'string') {
+      try {
+        req.body[field] = JSON.parse(req.body[field]);
+      } catch (err) {
+        // If it's not valid JSON, keep it as is
+        console.log(`Error parsing ${field}:`, err);
+      }
+    }
+  });
+  
   // Process HTML content if present
   if (req.body.description) {
     // Store HTML content as-is without encoding
@@ -69,6 +82,11 @@ const createProduct = catchAsync(async (req, res, next) => {
     req.body.care = req.body.care
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>');
+  }
+  
+  // Check if images were uploaded
+  if (!req.body.images || req.body.images.length === 0) {
+    return next(new AppError('At least one product image is required', 400));
   }
   
   const newProduct = await Product.create(req.body);
@@ -83,6 +101,19 @@ const createProduct = catchAsync(async (req, res, next) => {
 
 // Update product (Admin only)
 const updateProduct = catchAsync(async (req, res, next) => {
+  // Parse JSON strings from form data
+  const formDataFields = ['colors', 'materials', 'tags', 'seoKeywords'];
+  formDataFields.forEach(field => {
+    if (req.body[field] && typeof req.body[field] === 'string') {
+      try {
+        req.body[field] = JSON.parse(req.body[field]);
+      } catch (err) {
+        // If it's not valid JSON, keep it as is
+        console.log(`Error parsing ${field}:`, err);
+      }
+    }
+  });
+  
   // Process HTML content if present
   if (req.body.description) {
     // Store HTML content as-is without encoding
@@ -98,14 +129,23 @@ const updateProduct = catchAsync(async (req, res, next) => {
       .replace(/&gt;/g, '>');
   }
   
+  // Get the existing product
+  const existingProduct = await Product.findById(req.params.id);
+  
+  if (!existingProduct) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+  
+  // If new images were uploaded, they will be in req.body.images
+  // If no new images were uploaded, keep the existing ones
+  if (!req.body.images || req.body.images.length === 0) {
+    req.body.images = existingProduct.images;
+  }
+  
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     // runValidators: true
   });
-
-  if (!product) {
-    return next(new AppError('No product found with that ID', 404));
-  }
 
   res.status(200).json({
     status: 'success',

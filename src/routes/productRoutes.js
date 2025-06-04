@@ -1,6 +1,7 @@
 const express = require('express');
 const productController = require('../controllers/productController');
 const authMiddleware = require('../middleware/auth');
+const { uploadProductImages, processProductImages } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -13,8 +14,8 @@ router.get('/:id', productController.getProduct);
 router.use(authMiddleware.protect);
 router.use(authMiddleware.restrictTo('admin'));
 
-router.post('/', productController.createProduct);
-router.patch('/:id', productController.updateProduct);
+router.post('/', uploadProductImages, processProductImages, productController.createProduct);
+router.patch('/:id', uploadProductImages, processProductImages, productController.updateProduct);
 router.delete('/:id', productController.deleteProduct);
 
 module.exports = router;

@@ -73,8 +73,28 @@ const productSchema = new mongoose.Schema({
     trim: true
   },
   images: [{
-      type: String,
-      required: true
+      url: {
+        type: String,
+        required: true
+      },
+      publicId: {
+        type: String,
+        required: true
+      },
+      isPrimary: {
+        type: Boolean,
+        default: false
+      },
+      alt: {
+        type: String,
+        default: 'Product image'
+      },
+      variants: {
+        thumbnail: String,
+        medium: String,
+        large: String,
+        original: String
+      }
     }],
   tags: [{
     type: String,

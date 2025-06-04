@@ -19,7 +19,7 @@ const multerStorage = multer.memoryStorage();
 const cloudinaryStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'seramic-shop',
+    folder: 'ceramic-shop',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
     transformation: [
       { width: 1200, height: 1200, crop: 'limit', quality: 'auto' }
@@ -55,6 +55,7 @@ const uploadCloudinary = multer({
 
 // Middleware for uploading product images
 const uploadProductImages = uploadMemory.fields([
+  { name: 'productImages', maxCount: 10 },
   { name: 'images', maxCount: 10 },
   { name: 'primaryImage', maxCount: 1 }
 ]);
@@ -86,7 +87,7 @@ const processProductImages = catchAsync(async (req, res, next) => {
     const uploadPromise = new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
-          folder: 'seramic-shop/products',
+          folder: 'ceramic-shop/products',
           public_id: `product-${Date.now()}-primary`,
           transformation: [
             { width: 1200, height: 1200, crop: 'limit', quality: 'auto' }
@@ -110,7 +111,50 @@ const processProductImages = catchAsync(async (req, res, next) => {
     uploadPromises.push(uploadPromise);
   }
 
-  // Process additional images
+  // Process images from the 'productImages' field (from frontend)
+  if (req.files.productImages) {
+    req.files.productImages.forEach((file, index) => {
+      const uploadPromise = sharp(file.buffer)
+        .resize(1200, 1200, {
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .jpeg({ quality: 90 })
+        .toBuffer()
+        .then(processedBuffer => {
+          return new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream(
+              {
+                folder: 'ceramic-shop/products',
+                public_id: `product-${Date.now()}-${index}`,
+                transformation: [
+                  { width: 1200, height: 1200, crop: 'limit', quality: 'auto' }
+                ]
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else {
+                  // Set the first image as primary if no primary image was uploaded
+                  const isPrimary = index === 0 && !req.files.primaryImage;
+                  
+                  req.body.images.push({
+                    url: result.secure_url,
+                    publicId: result.public_id,
+                    isPrimary: isPrimary,
+                    alt: req.body.name || 'Product image'
+                  });
+                  resolve(result);
+                }
+              }
+            ).end(processedBuffer);
+          });
+        });
+
+      uploadPromises.push(uploadPromise);
+    });
+  }
+
+  // Process additional images from the 'images' field (backward compatibility)
   if (req.files.images) {
     req.files.images.forEach((file, index) => {
       const uploadPromise = sharp(file.buffer)
@@ -124,7 +168,7 @@ const processProductImages = catchAsync(async (req, res, next) => {
           return new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream(
               {
-                folder: 'seramic-shop/products',
+                folder: 'ceramic-shop/products',
                 public_id: `product-${Date.now()}-${index}`,
                 transformation: [
                   { width: 1200, height: 1200, crop: 'limit', quality: 'auto' }
@@ -133,10 +177,13 @@ const processProductImages = catchAsync(async (req, res, next) => {
               (error, result) => {
                 if (error) reject(error);
                 else {
+                  // Set the first image as primary if no primary image and no productImages were uploaded
+                  const isPrimary = index === 0 && !req.files.primaryImage && !req.files.productImages;
+                  
                   req.body.images.push({
                     url: result.secure_url,
                     publicId: result.public_id,
-                    isPrimary: false,
+                    isPrimary: isPrimary,
                     alt: req.body.name || 'Product image'
                   });
                   resolve(result);

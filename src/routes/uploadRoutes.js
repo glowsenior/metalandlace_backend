@@ -15,7 +15,7 @@ const router = express.Router();
 router.use(authController.protect);
 
 // Upload single image
-router.post('/single', uploadSingleImage, processSingleImage('seramic-shop/uploads'), catchAsync(async (req, res, next) => {
+router.post('/single', uploadSingleImage, processSingleImage('ceramic-shop/uploads'), catchAsync(async (req, res, next) => {
   if (!req.body.image) {
     return res.status(400).json({
       status: 'fail',
