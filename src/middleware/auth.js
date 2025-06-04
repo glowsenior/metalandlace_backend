@@ -130,6 +130,7 @@ const logout = (req, res) => {
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
   let token;
+  console.log(req.headers.authorization, '------authorization')
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')

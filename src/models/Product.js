@@ -38,8 +38,8 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Product category is required'],
     enum: {
-      values: ['vases', 'plates', 'gifts', 'decor', 'bowls', 'cups', 'sets'],
-      message: 'Category must be one of: vases, plates, gifts, decor, bowls, cups, sets'
+      values: ['Tumblers', 'Ceramics'],
+      message: 'Category must be one of: Tumblers, Ceramics'
     }
   },
   stock: {
@@ -73,17 +73,9 @@ const productSchema = new mongoose.Schema({
     trim: true
   },
   images: [{
-    url: {
       type: String,
       required: true
-    },
-    publicId: String,
-    alt: String,
-    isPrimary: {
-      type: Boolean,
-      default: false
-    }
-  }],
+    }],
   tags: [{
     type: String,
     trim: true,

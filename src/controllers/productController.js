@@ -4,7 +4,21 @@ const AppError = require('../utils/appError');
 
 // Get all products
 const getAllProducts = catchAsync(async (req, res, next) => {
+  const {category, price, sort, limit, newProduct, bestseller, featured } = req.query;
+  console.log(category, price)
   const products = await Product.find({ isActive: true });
+
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    data: {
+      products
+    }
+  });
+});
+
+const getAllProductsAdmin = catchAsync(async (req, res, next) => {
+  const products = await Product.find();
 
   res.status(200).json({
     status: 'success',
@@ -42,6 +56,21 @@ const getProduct = catchAsync(async (req, res, next) => {
 
 // Create new product (Admin only)
 const createProduct = catchAsync(async (req, res, next) => {
+  // Process HTML content if present
+  if (req.body.description) {
+    // Store HTML content as-is without encoding
+    req.body.description = req.body.description
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+  
+  if (req.body.care) {
+    // Store HTML content as-is without encoding
+    req.body.care = req.body.care
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+  
   const newProduct = await Product.create(req.body);
 
   res.status(201).json({
@@ -54,9 +83,24 @@ const createProduct = catchAsync(async (req, res, next) => {
 
 // Update product (Admin only)
 const updateProduct = catchAsync(async (req, res, next) => {
+  // Process HTML content if present
+  if (req.body.description) {
+    // Store HTML content as-is without encoding
+    req.body.description = req.body.description
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+  
+  if (req.body.care) {
+    // Store HTML content as-is without encoding
+    req.body.care = req.body.care
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>');
+  }
+  
   const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
-    runValidators: true
+    // runValidators: true
   });
 
   if (!product) {
@@ -87,6 +131,7 @@ const deleteProduct = catchAsync(async (req, res, next) => {
 
 module.exports = {
   getAllProducts,
+  getAllProductsAdmin,
   getProduct,
   createProduct,
   updateProduct,
